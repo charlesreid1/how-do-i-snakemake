@@ -309,8 +309,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stage-1-shell-script-and-snakefile" title="Stage 1: Shell Script and Snakefile" class="md-nav__link">
-    Stage 1: Shell Script and Snakefile
+  <a href="#stage-1-shell-script-snakefile" title="Stage 1: Shell Script + Snakefile" class="md-nav__link">
+    Stage 1: Shell Script + Snakefile
   </a>
   
     <nav class="md-nav">
@@ -402,8 +402,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stage-1-shell-script-and-snakefile" title="Stage 1: Shell Script and Snakefile" class="md-nav__link">
-    Stage 1: Shell Script and Snakefile
+  <a href="#stage-1-shell-script-snakefile" title="Stage 1: Shell Script + Snakefile" class="md-nav__link">
+    Stage 1: Shell Script + Snakefile
   </a>
   
     <nav class="md-nav">
@@ -544,7 +544,7 @@ downloading data files containing reads from a sequencer from an external URL:</
 </tr>
 </tbody>
 </table>
-<h2 id="stage-1-shell-script-and-snakefile">Stage 1: Shell Script and Snakefile<a class="headerlink" href="#stage-1-shell-script-and-snakefile" title="Permanent link">&para;</a></h2>
+<h2 id="stage-1-shell-script-snakefile">Stage 1: Shell Script + Snakefile<a class="headerlink" href="#stage-1-shell-script-snakefile" title="Permanent link">&para;</a></h2>
 <h3 id="the-shell-script">The Shell Script<a class="headerlink" href="#the-shell-script" title="Permanent link">&para;</a></h3>
 <p>Start out with a single Snakemake rule that calls a single bash shell script
 that downloads all the reads. Here is a shell script that uses for loop magic
@@ -604,11 +604,12 @@ to download each of the read files:</p>
 </pre></div>
 </td></tr></table>
 
-<p>It is important to use the <code>set -e</code> option in the shell script so that
-if any of the downloads fail, the <code>download_reads.shs</code> script will also fail.</p>
+<p>The <code>set -e</code> option will stop execution of the script if any errors are
+encountered. If any of the downloads fail, the shell script will fail, and 
+the Snakemake <code>download_reads</code> rule will fail.</p>
 <p>Paste this into <code>download_reads.sh</code>, and run the following command on
 the command line to make <code>download_reads.sh</code> executable:</p>
-<div class="codehilite"><pre><span></span>chmod download_reads.sh
+<div class="codehilite"><pre><span></span>$ chmod download_reads.sh
 </pre></div>
 
 
