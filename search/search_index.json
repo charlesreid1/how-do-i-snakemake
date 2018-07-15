@@ -1,0 +1,109 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "How Do I Snakemake?\n\u00b6\n\n\nA guide to getting up and running with Snakemake.\n\n\nSnakemake is a powerful tool for building complex workflows in Python.\nIt is similar to \nGNU make\n,\nfrom whence it derives its name.\n\n\nHowever, Snakemake is more powerful than make, and there are some important \ndifferences (that are also reasons for \nmake\n users to migrate to Snakemake):\n\n\n\n\n\n\nSnakemake is implemented in Python, so Snakemake is able to bootstrap on the\n  capabilities of Python. Snakefiles are also Python programs, so Python modules\n  can be used in workflow definitions.\n\n\n\n\n\n\nSnakemake integrates seamlessly with conda, and a conda environment file can\n  be specified for a given rule.\n\n\n\n\n\n\nSnakemake can be used with Singularity (containerization technology for\n  running Docker containers on high performance computing (HPC) clusters)\n  or with Kubernetes (technology for running multiple Docker containers across\n  multiple machines).\n\n\n\n\n\n\nSnakemake integrates with HPC batch and queue systems, and can be used to\n  run workflows using HPC or batch systems.\n\n\n\n\n\n\nInstalling\n\u00b6\n\n\nInstalling Snakemake\n - covers the installation of Snakemake \nusing pip or conda.\n\n\nTerminology\n\u00b6\n\n\nSnakemake Terminology\n - a glossary of Snakemake terms used\nthroughout this documentation and what they mean.\n\n\nConverting Workflows to Snakemake\n\u00b6\n\n\nConverting Workflows to Snakemake\n - covers strategies for\nconverting shell script workflows into Snakemake workflows.",
+            "title": "Index"
+        },
+        {
+            "location": "/#how-do-i-snakemake",
+            "text": "A guide to getting up and running with Snakemake.  Snakemake is a powerful tool for building complex workflows in Python.\nIt is similar to  GNU make ,\nfrom whence it derives its name.  However, Snakemake is more powerful than make, and there are some important \ndifferences (that are also reasons for  make  users to migrate to Snakemake):    Snakemake is implemented in Python, so Snakemake is able to bootstrap on the\n  capabilities of Python. Snakefiles are also Python programs, so Python modules\n  can be used in workflow definitions.    Snakemake integrates seamlessly with conda, and a conda environment file can\n  be specified for a given rule.    Snakemake can be used with Singularity (containerization technology for\n  running Docker containers on high performance computing (HPC) clusters)\n  or with Kubernetes (technology for running multiple Docker containers across\n  multiple machines).    Snakemake integrates with HPC batch and queue systems, and can be used to\n  run workflows using HPC or batch systems.",
+            "title": "How Do I Snakemake?"
+        },
+        {
+            "location": "/#installing",
+            "text": "Installing Snakemake  - covers the installation of Snakemake \nusing pip or conda.",
+            "title": "Installing"
+        },
+        {
+            "location": "/#terminology",
+            "text": "Snakemake Terminology  - a glossary of Snakemake terms used\nthroughout this documentation and what they mean.",
+            "title": "Terminology"
+        },
+        {
+            "location": "/#converting-workflows-to-snakemake",
+            "text": "Converting Workflows to Snakemake  - covers strategies for\nconverting shell script workflows into Snakemake workflows.",
+            "title": "Converting Workflows to Snakemake"
+        },
+        {
+            "location": "/installing/",
+            "text": "Installing Snakemake\n\u00b6\n\n\nTODO\n\n\nInstalling Snakemake with Pip\n\u00b6\n\n\nInstalling Snakemake with Conda\n\u00b6",
+            "title": "Installing Snakemake"
+        },
+        {
+            "location": "/installing/#installing-snakemake",
+            "text": "TODO",
+            "title": "Installing Snakemake"
+        },
+        {
+            "location": "/installing/#installing-snakemake-with-pip",
+            "text": "",
+            "title": "Installing Snakemake with Pip"
+        },
+        {
+            "location": "/installing/#installing-snakemake-with-conda",
+            "text": "",
+            "title": "Installing Snakemake with Conda"
+        },
+        {
+            "location": "/terminology/",
+            "text": "Terminology\n\u00b6\n\n\n\n\n\n\nrule\n - Snakemake rules define a given task,\n    the input files it depends on, the output files\n    it produces, the shell commands it should run,\n    etc.\n\n\n\n\n\n\ndirective\n - this refers to subheadings of rules,\n    such as \ninput:\n or \noutput:\n or \nshell:",
+            "title": "Snakemake Terminology"
+        },
+        {
+            "location": "/terminology/#terminology",
+            "text": "rule  - Snakemake rules define a given task,\n    the input files it depends on, the output files\n    it produces, the shell commands it should run,\n    etc.    directive  - this refers to subheadings of rules,\n    such as  input:  or  output:  or  shell:",
+            "title": "Terminology"
+        },
+        {
+            "location": "/converting/",
+            "text": "Converting Workflows to Snakemake\n\u00b6\n\n\nOne of the common questions about Snakemake is, \nhow should beginners get\nstarted?\n\n\nWhen you're starting out with Snakemake, one of the first hurdles you'll\nencounter is a big gap between the examples (simple) and your real-world\nworkflow (complicated).\n\n\nSnakemake is a relatively new (but well-documented) piece of software, so there\naren't a lot of examples, and the ones you can find will leave you wanting more.\nStarting out, you'll find that (nearly) every step of your workflow presents\nsome kind of corner case that's not covered in any Snakemake examples.\n\n\nTwo recommendations to help overcome this:\n\n\n\n\n\n\nDon't \nstart\n with Snakemake - start with shell scripts. Get your pipeline\n   working as a shell script or a list of commands first, using a small data set.\n   \nThen\n convert the workflow to Snakemake.\n\n\n\n\n\n\nConverting your workflow from shell scripts to a Snakefile can happen in\n   \nstages\n. Start with a single Snakemake rule that calls a single bash shell\n   script that downloads all of the reads at once (handle the complexity in the\n   shell script).  Eventually, you can start to break up the shell script into\n   smaller parts, and convert some of those parts into separate Snakemake rules.\n\n\n\n\n\n\nExample: Filtering Sequencer Reads\n\u00b6\n\n\nLet's illustrate the process of converting a workflow from shell scripts to a\nSnakefile, and doing so in stages, using a hypothetical workflow that involves\ndownloading data files containing reads from a sequencer from an external URL:\n\n\n\n\n\n\n\n\nRead Files\n\n\nURL\n\n\n\n\n\n\n\n\n\n\nSRR606_1_reads.fq.gz\n\n\nhttp://example.com/SRR606_1_reads.fq.gz\n\n\n\n\n\n\nSRR606_2_reads.fq.gz\n\n\nhttp://example.com/SRR606_2_reads.fq.gz\n\n\n\n\n\n\nSRR607_1_reads.fq.gz\n\n\nhttp://example.com/SRR607_1_reads.fq.gz\n\n\n\n\n\n\nSRR607_2_reads.fq.gz\n\n\nhttp://example.com/SRR607_2_reads.fq.gz\n\n\n\n\n\n\nSRR608_1_reads.fq.gz\n\n\nhttp://example.com/SRR608_1_reads.fq.gz\n\n\n\n\n\n\nSRR608_2_reads.fq.gz\n\n\nhttp://example.com/SRR608_2_reads.fq.gz\n\n\n\n\n\n\nSRR609_1_reads.fq.gz\n\n\nhttp://example.com/SRR609_1_reads.fq.gz\n\n\n\n\n\n\nSRR609_2_reads.fq.gz\n\n\nhttp://example.com/SRR609_2_reads.fq.gz\n\n\n\n\n\n\n\n\nStage 1: Shell Script and Snakefile\n\u00b6\n\n\nThe Shell Script\n\u00b6\n\n\nStart out with a single Snakemake rule that calls a single bash shell script\nthat downloads all the reads. Here is a shell script that uses for loop magic\nto download each of the read files:\n\n\ndownload_reads.sh\n:\n\n\n 1\n 2\n 3\n 4\n 5\n 6\n 7\n 8\n 9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n#!/bin/bash\n\n\n# \n\n\n# Download some fake read files\n\n\n\n# Fail on the first error\n\n\nset\n -e\n\n\nreads\n=\n\" SRR606_1_reads.fq.gz\n\n\nSRR606_2_reads.fq.gz\n\n\nSRR607_1_reads.fq.gz\n\n\nSRR607_2_reads.fq.gz\n\n\nSRR608_1_reads.fq.gz\n\n\nSRR608_2_reads.fq.gz\n\n\nSRR609_1_reads.fq.gz\n\n\nSRR609_2_reads.fq.gz\"\n\n\n\nfor\n \nread\n in \n$reads\n;\n \ndo\n\n\n    \necho\n \n\"Now downloading read file: \n${\nread\n}\n\"\n\n\n    \n# Download the read file's (fake) URL\n\n    curl -L https://example.com/\n${\nread\n}\n -o \n${\nread\n}\n\n\n    \necho\n \n\"Done.\"\n\n\n\ndone\n\n\n\n\n\n\n\nIt is important to use the \nset -e\n option in the shell script so that\nif any of the downloads fail, the \ndownload_reads.shs\n script will also fail.\n\n\nPaste this into \ndownload_reads.sh\n, and run the following command on\nthe command line to make \ndownload_reads.sh\n executable:\n\n\nchmod download_reads.sh\n\n\n\n\n\nThe Snakemake Strategy\n\u00b6\n\n\nNow we want to create a Snakefile with a single very simple rule called\n\ndownload_reads\n that will call \ndownload_reads.sh\n. \n\n\nRight away, we run into a challenge: Snakemake operates using files and\nfilenames to infer which rules to run and which rules to skip.  That means any\nSnakemake rule to download read files needs to have a list of files that will\nonly be present if the rule that runs the download reads script has successfully\nrun.\n\n\nIf we want to have Snakemake run the \ndownload_reads.sh\n script with a single\nrule, our options, in order of worst to best, are:\n\n\n\n\n\n\n(WORST)\n We can tell Snakemake the name of every read file (copy-and-paste from the\n  shell script into the Snakefile) so it knows what read files should be\n  present when the download script has run. This requires duplicating the \n  list of read file names across two files - \nYUCK!!!\n\n\n\n\n\n\n(BETTER BUT STILL BAD)\n We can tell Snakemake the name of \none\n read file, so\n  that if that one read file is present, Snakemake will assume the rest are also\n  present and that the \ndownload_reads.sh\n script has already been run. This has\n  the same disadvantage of needing to keep read file names coordinated across\n  two separate files, but also has the disadvantage that it cannot detect if the\n  process of downloading reads actually completed, or if it was only partially\n  completed. \n\n\n\n\n\n\n(BEST)\n We can bypass the use of the read files altogether and use a handy\n  command, \ntouch\n, to create a simple empty file whose presence indicates the\n  download reads step has run. When we instruct Snakemake to run the download\n  reads script, we add a command like \ntouch .downloaded_reads\n, so that if the\n  file \n.downloaded_reads\n is present, the rule will not be run.\n\n\n\n\n\n\nWhy do we use a file prefixed with a dot? That keeps the file hidden when we run \nls\n\nand keeps our working directory clean. \n\n\nWe need to tell Snakemake that the dotfile we touch is the output of the rule,\nso that it knows to link the dotfile \n.downloaded_reads\n with the rule\n\ndownload_reads\n. To do that, we use Snakemake's \ntouch()\n command when we\nspecify the output files from the rule.\n\n\n\n\nTip: Running shell scripts with Snakemake\n\n\nIf you are writing a Snakemake rule that runs a shell script that outputs\nmultiple files, you can avoid keeping duplicate lists of files in both the\nshell script and the Snakefile by defining the output of the Snakemake rule\nthat runs the shell script to be a dotfile (file whose name starts with a\ndot, so it is hidden) that is touched when the rule is finished.\n\n\nUse Snakemake's \ntouch()\n function in the \noutput:\n section of your rule.\n\n\n\n\nThe Snakefile\n\u00b6\n\n\nOur Snakefile will define a single rule to run the shell script using\nthe command above. This Snakefile demonstrates a couple of concepts:\n\n\n\n\nUsing the \ntouch()\n function to link the \n.downloaded_reads\n dotfile with\n  the \ndownload_reads\n rule\n\n\nUsing a normally-defined Python variable inside of a Snakemake rule\n\n\nDocumenting a rule using a triple-quoted Python docstring and using\n  Python-style \n#\n comments\n\n\n\n\nSnakefile\n:\n\n\ntouchfile\n \n=\n \n'.downloaded_reads'\n\n\n\nrule\n \ndownload_reads\n:\n\n    \n\"\"\"\n\n\n    Run a shell script that downloads all of our read files.\n\n\n    \"\"\"\n\n    \noutput\n:\n\n        \n# This rule is now linked to this touchfile\n\n        \ntouch\n(\ntouchfile\n)\n\n    \nshell\n:\n\n        \n'''\n\n\n        ./download_reads.sh\n\n\n        '''\n\n\n\n\n\n\nPaste the Python code above into a file called \nSnakefile\n.\n\n\nRunning Snakemake\n\u00b6\n\n\nStart by making sure you have Snakemake installed (see the \n\nInstalling Snakemake\n page for instructions).\n\n\nStage 2: Replace Script with Snakefile (Hard-Coded)\n\u00b6\n\n\nStage 2: Replace Script with Snakefile (Wildcards)\n\u00b6",
+            "title": "Converting Workflows to Snakemake"
+        },
+        {
+            "location": "/converting/#converting-workflows-to-snakemake",
+            "text": "One of the common questions about Snakemake is,  how should beginners get\nstarted?  When you're starting out with Snakemake, one of the first hurdles you'll\nencounter is a big gap between the examples (simple) and your real-world\nworkflow (complicated).  Snakemake is a relatively new (but well-documented) piece of software, so there\naren't a lot of examples, and the ones you can find will leave you wanting more.\nStarting out, you'll find that (nearly) every step of your workflow presents\nsome kind of corner case that's not covered in any Snakemake examples.  Two recommendations to help overcome this:    Don't  start  with Snakemake - start with shell scripts. Get your pipeline\n   working as a shell script or a list of commands first, using a small data set.\n    Then  convert the workflow to Snakemake.    Converting your workflow from shell scripts to a Snakefile can happen in\n    stages . Start with a single Snakemake rule that calls a single bash shell\n   script that downloads all of the reads at once (handle the complexity in the\n   shell script).  Eventually, you can start to break up the shell script into\n   smaller parts, and convert some of those parts into separate Snakemake rules.",
+            "title": "Converting Workflows to Snakemake"
+        },
+        {
+            "location": "/converting/#example-filtering-sequencer-reads",
+            "text": "Let's illustrate the process of converting a workflow from shell scripts to a\nSnakefile, and doing so in stages, using a hypothetical workflow that involves\ndownloading data files containing reads from a sequencer from an external URL:     Read Files  URL      SRR606_1_reads.fq.gz  http://example.com/SRR606_1_reads.fq.gz    SRR606_2_reads.fq.gz  http://example.com/SRR606_2_reads.fq.gz    SRR607_1_reads.fq.gz  http://example.com/SRR607_1_reads.fq.gz    SRR607_2_reads.fq.gz  http://example.com/SRR607_2_reads.fq.gz    SRR608_1_reads.fq.gz  http://example.com/SRR608_1_reads.fq.gz    SRR608_2_reads.fq.gz  http://example.com/SRR608_2_reads.fq.gz    SRR609_1_reads.fq.gz  http://example.com/SRR609_1_reads.fq.gz    SRR609_2_reads.fq.gz  http://example.com/SRR609_2_reads.fq.gz",
+            "title": "Example: Filtering Sequencer Reads"
+        },
+        {
+            "location": "/converting/#stage-1-shell-script-and-snakefile",
+            "text": "",
+            "title": "Stage 1: Shell Script and Snakefile"
+        },
+        {
+            "location": "/converting/#the-shell-script",
+            "text": "Start out with a single Snakemake rule that calls a single bash shell script\nthat downloads all the reads. Here is a shell script that uses for loop magic\nto download each of the read files:  download_reads.sh :   1\n 2\n 3\n 4\n 5\n 6\n 7\n 8\n 9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26 #!/bin/bash  #   # Download some fake read files  # Fail on the first error  set  -e reads = \" SRR606_1_reads.fq.gz  SRR606_2_reads.fq.gz  SRR607_1_reads.fq.gz  SRR607_2_reads.fq.gz  SRR608_1_reads.fq.gz  SRR608_2_reads.fq.gz  SRR609_1_reads.fq.gz  SRR609_2_reads.fq.gz\"  for   read  in  $reads ;   do \n\n     echo   \"Now downloading read file:  ${ read } \" \n\n     # Download the read file's (fake) URL \n    curl -L https://example.com/ ${ read }  -o  ${ read } \n\n     echo   \"Done.\"  done    It is important to use the  set -e  option in the shell script so that\nif any of the downloads fail, the  download_reads.shs  script will also fail.  Paste this into  download_reads.sh , and run the following command on\nthe command line to make  download_reads.sh  executable:  chmod download_reads.sh",
+            "title": "The Shell Script"
+        },
+        {
+            "location": "/converting/#the-snakemake-strategy",
+            "text": "Now we want to create a Snakefile with a single very simple rule called download_reads  that will call  download_reads.sh .   Right away, we run into a challenge: Snakemake operates using files and\nfilenames to infer which rules to run and which rules to skip.  That means any\nSnakemake rule to download read files needs to have a list of files that will\nonly be present if the rule that runs the download reads script has successfully\nrun.  If we want to have Snakemake run the  download_reads.sh  script with a single\nrule, our options, in order of worst to best, are:    (WORST)  We can tell Snakemake the name of every read file (copy-and-paste from the\n  shell script into the Snakefile) so it knows what read files should be\n  present when the download script has run. This requires duplicating the \n  list of read file names across two files -  YUCK!!!    (BETTER BUT STILL BAD)  We can tell Snakemake the name of  one  read file, so\n  that if that one read file is present, Snakemake will assume the rest are also\n  present and that the  download_reads.sh  script has already been run. This has\n  the same disadvantage of needing to keep read file names coordinated across\n  two separate files, but also has the disadvantage that it cannot detect if the\n  process of downloading reads actually completed, or if it was only partially\n  completed.     (BEST)  We can bypass the use of the read files altogether and use a handy\n  command,  touch , to create a simple empty file whose presence indicates the\n  download reads step has run. When we instruct Snakemake to run the download\n  reads script, we add a command like  touch .downloaded_reads , so that if the\n  file  .downloaded_reads  is present, the rule will not be run.    Why do we use a file prefixed with a dot? That keeps the file hidden when we run  ls \nand keeps our working directory clean.   We need to tell Snakemake that the dotfile we touch is the output of the rule,\nso that it knows to link the dotfile  .downloaded_reads  with the rule download_reads . To do that, we use Snakemake's  touch()  command when we\nspecify the output files from the rule.   Tip: Running shell scripts with Snakemake  If you are writing a Snakemake rule that runs a shell script that outputs\nmultiple files, you can avoid keeping duplicate lists of files in both the\nshell script and the Snakefile by defining the output of the Snakemake rule\nthat runs the shell script to be a dotfile (file whose name starts with a\ndot, so it is hidden) that is touched when the rule is finished.  Use Snakemake's  touch()  function in the  output:  section of your rule.",
+            "title": "The Snakemake Strategy"
+        },
+        {
+            "location": "/converting/#the-snakefile",
+            "text": "Our Snakefile will define a single rule to run the shell script using\nthe command above. This Snakefile demonstrates a couple of concepts:   Using the  touch()  function to link the  .downloaded_reads  dotfile with\n  the  download_reads  rule  Using a normally-defined Python variable inside of a Snakemake rule  Documenting a rule using a triple-quoted Python docstring and using\n  Python-style  #  comments   Snakefile :  touchfile   =   '.downloaded_reads'  rule   download_reads : \n     \"\"\"      Run a shell script that downloads all of our read files.      \"\"\" \n     output : \n         # This rule is now linked to this touchfile \n         touch ( touchfile ) \n     shell : \n         '''          ./download_reads.sh          '''   Paste the Python code above into a file called  Snakefile .",
+            "title": "The Snakefile"
+        },
+        {
+            "location": "/converting/#running-snakemake",
+            "text": "Start by making sure you have Snakemake installed (see the  Installing Snakemake  page for instructions).",
+            "title": "Running Snakemake"
+        },
+        {
+            "location": "/converting/#stage-2-replace-script-with-snakefile-hard-coded",
+            "text": "",
+            "title": "Stage 2: Replace Script with Snakefile (Hard-Coded)"
+        },
+        {
+            "location": "/converting/#stage-2-replace-script-with-snakefile-wildcards",
+            "text": "",
+            "title": "Stage 2: Replace Script with Snakefile (Wildcards)"
+        }
+    ]
+}
