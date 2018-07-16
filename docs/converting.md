@@ -43,7 +43,7 @@ downloading data files containing reads from a sequencer from an external URL:
 | `SRR609_2_reads.fq.gz` | `http://example.com/SRR609_2_reads.fq.gz` |
 
 
-## Stage 1: Shell Script and Snakefile
+## Stage 1: Shell Script + Snakefile
 
 ### The Shell Script
 
@@ -82,14 +82,15 @@ for read in $reads; do
 done
 ```
 
-It is important to use the `set -e` option in the shell script so that
-if any of the downloads fail, the `download_reads.shs` script will also fail.
+The `set -e` option will stop execution of the script if any errors are
+encountered. If any of the downloads fail, the shell script will fail, and 
+the Snakemake `download_reads` rule will fail.
 
 Paste this into `download_reads.sh`, and run the following command on
 the command line to make `download_reads.sh` executable:
 
 ```bash
-chmod download_reads.sh
+$ chmod download_reads.sh
 ```
 
 ### The Snakemake Strategy
@@ -176,10 +177,33 @@ rule download_reads:
 Paste the Python code above into a file called `Snakefile`.
 
 
+
+### Snakemake Flags
+
+Before we run Snakemake, let's cover two useful flags:
+
+* The `--dryrun` or `-n` option will print out the rules that Snakemake would
+  run, but does not actually run them.
+
+* The `--printshellcmds` or `-p` option will print out the shell command
+  associated with each rule.
+
+See [Executing
+Snakemake](https://snakemake.readthedocs.io/en/stable/executable.html#all-options)
+in the Snakemake documentation for a complete list of command line
+arguments that Snakemake accepts.
+
+
 ### Running Snakemake
 
-Start by making sure you have Snakemake installed (see the 
-[Installing Snakemake](installing.md) page for instructions).
+Start by making sure you have Snakemake installed (see the [Installing
+Snakemake](installing.md) page for instructions).
+
+When you run the `snakemake` command without specifying a target, it 
+will determine a default target and run that. The default target is the
+first rule in the Snakefile.
+
+Alternatively, we can specify the `download_reads` target.
 
 
 
@@ -189,15 +213,11 @@ Start by making sure you have Snakemake installed (see the
 
 
 
-### Stage 2: Replace Script with Snakefile (Hard-Coded)
+
+## Stage 2: Replace Script with Snakefile (Hard-Coded)
 
 
 
 
-### Stage 2: Replace Script with Snakefile (Wildcards)
-
-
-
-
-
+## Stage 2: Replace Script with Snakefile (Wildcards)
 
