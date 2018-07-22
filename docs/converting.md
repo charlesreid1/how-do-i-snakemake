@@ -31,16 +31,16 @@ Let's illustrate the process of converting a workflow from shell scripts to a
 Snakefile, and doing so in stages, using a hypothetical workflow that involves
 downloading data files containing reads from a sequencer from an external URL:
 
-| Read Files | URL   |
-|------------|-------|
-| `SRR606_1_reads.fq.gz` | `http://example.com/SRR606_1_reads.fq.gz` | 
-| `SRR606_2_reads.fq.gz` | `http://example.com/SRR606_2_reads.fq.gz` |
-| `SRR607_1_reads.fq.gz` | `http://example.com/SRR607_1_reads.fq.gz` |
-| `SRR607_2_reads.fq.gz` | `http://example.com/SRR607_2_reads.fq.gz` |
-| `SRR608_1_reads.fq.gz` | `http://example.com/SRR608_1_reads.fq.gz` |
-| `SRR608_2_reads.fq.gz` | `http://example.com/SRR608_2_reads.fq.gz` |
-| `SRR609_1_reads.fq.gz` | `http://example.com/SRR609_1_reads.fq.gz` |
-| `SRR609_2_reads.fq.gz` | `http://example.com/SRR609_2_reads.fq.gz` |
+| Read Files | URL (note: these links are fake) |
+|------------|----------------------------------|
+| `SRR606_1_reads.fq.gz` | <http://example.com/SRR606_1_reads.fq.gz> | 
+| `SRR606_2_reads.fq.gz` | <http://example.com/SRR606_2_reads.fq.gz> |
+| `SRR607_1_reads.fq.gz` | <http://example.com/SRR607_1_reads.fq.gz> |
+| `SRR607_2_reads.fq.gz` | <http://example.com/SRR607_2_reads.fq.gz> |
+| `SRR608_1_reads.fq.gz` | <http://example.com/SRR608_1_reads.fq.gz> |
+| `SRR608_2_reads.fq.gz` | <http://example.com/SRR608_2_reads.fq.gz> |
+| `SRR609_1_reads.fq.gz` | <http://example.com/SRR609_1_reads.fq.gz> |
+| `SRR609_2_reads.fq.gz` | <http://example.com/SRR609_2_reads.fq.gz> |
 
 
 ## Stage 1: Shell Script + Snakefile
@@ -177,7 +177,6 @@ rule download_reads:
 Paste the Python code above into a file called `Snakefile`.
 
 
-
 ### Snakemake Flags
 
 Before we run Snakemake, let's cover two useful flags:
@@ -203,8 +202,134 @@ When you run the `snakemake` command without specifying a target, it
 will determine a default target and run that. The default target is the
 first rule in the Snakefile.
 
-Alternatively, we can specify the `download_reads` target.
+Alternatively, we can specify the `download_reads` target when we run Snakemake.
 
+From the command line, run the following:
+
+```bash
+snakemake --dryrun --printshellcmds download_reads
+```
+
+This should show us that Snakemake will run a single rule and a single command:
+
+```plain
+$ snakemake --dryrun --printshellcmds download_reads
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	download_reads
+	1
+
+rule download_reads:
+    output: .downloaded_reads
+    jobid: 0
+
+
+        ./download_reads.sh
+
+Job counts:
+	count	jobs
+	1	download_reads
+	1
+```
+
+When we run the command without the `--dryrun` option, we should see
+the output from several curl commands:
+
+```
+$ snakemake --printshellcmds download_reads
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	download_reads
+	1
+
+rule download_reads:
+    output: .downloaded_reads
+    jobid: 0
+
+
+        ./download_reads.sh
+
+Now downloading read file: SRR606_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   2346      0 --:--:-- --:--:-- --:--:--  2347
+Now downloading read file: SRR606_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   6214      0 --:--:-- --:--:-- --:--:--  6195
+Now downloading read file: SRR607_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5191      0 --:--:-- --:--:-- --:--:--  5204
+Now downloading read file: SRR607_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5296      0 --:--:-- --:--:-- --:--:--  5313
+Now downloading read file: SRR608_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5981      0 --:--:-- --:--:-- --:--:--  5990
+Now downloading read file: SRR608_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   6177      0 --:--:-- --:--:-- --:--:--  6165
+Now downloading read file: SRR609_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   4482      0 --:--:-- --:--:-- --:--:--  4487
+Now downloading read file: SRR609_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5558      0 --:--:-- --:--:-- --:--:--  5570
+Touching output file .downloaded_reads.
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log:
+/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T145427.253977.snakemake.log
+```
+
+Notice that Snakemake does not touch the file `.downloaded_reads` until it
+completes running the script. It is important to add the `set -e` command 
+to any shell script being run this way, because otherwise the script
+will keep going when it encounters errors, and Snakemake will think the
+script completed successfully and will touch `.downloaded_reads`.
+
+
+### The `.snakemake` Directory
+
+The above script was run from `/tmp/how-do-i-snakemake`. Snakemake created a
+directory called `.snakemake/` to store its own files. Snakemake automatically
+creates a log of what occurred in `.snakemake/log/` in a timestamped log file:
+
+```
+/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T145427.253977.snakemake.log
+```
+
+
+### Re-running Snakemake
+
+If you re-run Snakemake, it will find the `.downloaded_reads` file and will
+not download the files again:
+
+```
+$ snakemake
+Building DAG of jobs...
+Nothing to be done.
+Complete log: /private/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T165657.111397.snakemake.log
+```
+
+You can force Snakemake to re-download the files two ways:
+
+* Remove the output dotfile that the rule creates; this will cause Snakemake
+  to detect that the output file for the rule is missing, and it will re-run
+  the rule.
+
+* Run Snakemake with the `--force` flag.
 
 
 
@@ -219,5 +344,7 @@ Alternatively, we can specify the `download_reads` target.
 
 
 
-## Stage 2: Replace Script with Snakefile (Wildcards)
+## Stage 3: Replace Script with Snakefile (Wildcards)
+
+
 

@@ -24,9 +24,17 @@ differences (that are also reasons for `make` users to migrate to Snakemake):
 * Snakemake integrates with HPC batch and queue systems, and can be used to
   run workflows using HPC or batch systems.
 
+## Links
+
+How Do I Snakemake on pages.charlesreid1.com:
+<https://pages.charlesreid1.com/how-do-i-snakemake>
+
+Source code for tutorial on git.charlesreid1.com:
+<https://git.charlesreid1.com/charlesreid1/how-do-i-snakemake>
+
 ## Installing
 
-[Installing Snakemake](installing.md) - covers the installation of Snakemake 
+[Installing Snakemake](installing.md) - installation instructions for Snakemake
 using pip or conda.
 
 
@@ -38,7 +46,13 @@ throughout this documentation and what they mean.
 
 ## Converting Workflows to Snakemake
 
-[Converting Workflows to Snakemake](converting.md) - covers strategies for
+[Converting Workflows to Snakemake](converting.md) - strategies for
 converting shell script workflows into Snakemake workflows.
 
+
+## Useful Resources
+
+Following is a list of useful Snakemake resources:
+
+* <https://snakemake.readthedocs.io/>
 
