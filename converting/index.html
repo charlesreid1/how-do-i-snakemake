@@ -351,6 +351,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#the-snakemake-directory" title="The .snakemake Directory" class="md-nav__link">
+    The .snakemake Directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-running-snakemake" title="Re-running Snakemake" class="md-nav__link">
+    Re-running Snakemake
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -447,6 +461,20 @@
           <li class="md-nav__item">
   <a href="#running-snakemake" title="Running Snakemake" class="md-nav__link">
     Running Snakemake
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-snakemake-directory" title="The .snakemake Directory" class="md-nav__link">
+    The .snakemake Directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-running-snakemake" title="Re-running Snakemake" class="md-nav__link">
+    Re-running Snakemake
   </a>
   
 </li>
@@ -726,7 +754,127 @@ Snakemake</a> page for instructions).</p>
 <p>When you run the <code>snakemake</code> command without specifying a target, it 
 will determine a default target and run that. The default target is the
 first rule in the Snakefile.</p>
-<p>Alternatively, we can specify the <code>download_reads</code> target.</p>
+<p>Alternatively, we can specify the <code>download_reads</code> target when we run Snakemake.</p>
+<p>From the command line, run the following:</p>
+<div class="codehilite"><pre><span></span>snakemake --dryrun --printshellcmds download_reads
+</pre></div>
+
+
+<p>This should show us that Snakemake will run a single rule and a single command:</p>
+<div class="codehilite"><pre><span></span>$ snakemake --dryrun --printshellcmds download_reads
+Building DAG of jobs...
+Job counts:
+    count   jobs
+    1   download_reads
+    1
+
+rule download_reads:
+    output: .downloaded_reads
+    jobid: 0
+
+
+        ./download_reads.sh
+
+Job counts:
+    count   jobs
+    1   download_reads
+    1
+</pre></div>
+
+
+<p>When we run the command without the <code>--dryrun</code> option, we should see
+the output from several curl commands:</p>
+<div class="codehilite"><pre><span></span>$ snakemake --printshellcmds download_reads
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+    count   jobs
+    1   download_reads
+    1
+
+rule download_reads:
+    output: .downloaded_reads
+    jobid: 0
+
+
+        ./download_reads.sh
+
+Now downloading read file: SRR606_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   2346      0 --:--:-- --:--:-- --:--:--  2347
+Now downloading read file: SRR606_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   6214      0 --:--:-- --:--:-- --:--:--  6195
+Now downloading read file: SRR607_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5191      0 --:--:-- --:--:-- --:--:--  5204
+Now downloading read file: SRR607_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5296      0 --:--:-- --:--:-- --:--:--  5313
+Now downloading read file: SRR608_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5981      0 --:--:-- --:--:-- --:--:--  5990
+Now downloading read file: SRR608_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   6177      0 --:--:-- --:--:-- --:--:--  6165
+Now downloading read file: SRR609_1_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   4482      0 --:--:-- --:--:-- --:--:--  4487
+Now downloading read file: SRR609_2_reads.fq.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1270  100  1270    0     0   5558      0 --:--:-- --:--:-- --:--:--  5570
+Touching output file .downloaded_reads.
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log:
+/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T145427.253977.snakemake.log
+</pre></div>
+
+
+<p>Notice that Snakemake does not touch the file <code>.downloaded_reads</code> until it
+completes running the script. It is important to add the <code>set -e</code> command 
+to any shell script being run this way, because otherwise the script
+will keep going when it encounters errors, and Snakemake will think the
+script completed successfully and will touch <code>.downloaded_reads</code>.</p>
+<h3 id="the-snakemake-directory">The <code>.snakemake</code> Directory<a class="headerlink" href="#the-snakemake-directory" title="Permanent link">&para;</a></h3>
+<p>The above script was run from <code>/tmp/how-do-i-snakemake</code>. Snakemake created a
+directory called <code>.snakemake/</code> to store its own files. Snakemake automatically
+creates a log of what occurred in <code>.snakemake/log/</code> in a timestamped log file:</p>
+<div class="codehilite"><pre><span></span>/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T145427.253977.snakemake.log
+</pre></div>
+
+
+<h3 id="re-running-snakemake">Re-running Snakemake<a class="headerlink" href="#re-running-snakemake" title="Permanent link">&para;</a></h3>
+<p>If you re-run Snakemake, it will find the <code>.downloaded_reads</code> file and will
+not download the files again:</p>
+<div class="codehilite"><pre><span></span>$ snakemake
+Building DAG of jobs...
+Nothing to be done.
+Complete log: /private/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T165657.111397.snakemake.log
+</pre></div>
+
+
+<p>You can force Snakemake to re-download the files two ways:</p>
+<ul>
+<li>
+<p>Remove the output dotfile that the rule creates; this will cause Snakemake
+  to detect that the output file for the rule is missing, and it will re-run
+  the rule.</p>
+</li>
+<li>
+<p>Run Snakemake with the <code>--force</code> flag.</p>
+</li>
+</ul>
 <h2 id="stage-2-replace-script-with-snakefile-hard-coded">Stage 2: Replace Script with Snakefile (Hard-Coded)<a class="headerlink" href="#stage-2-replace-script-with-snakefile-hard-coded" title="Permanent link">&para;</a></h2>
 <h2 id="stage-3-replace-script-with-snakefile-wildcards">Stage 3: Replace Script with Snakefile (Wildcards)<a class="headerlink" href="#stage-3-replace-script-with-snakefile-wildcards" title="Permanent link">&para;</a></h2>
                 
