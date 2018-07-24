@@ -333,15 +333,60 @@ You can force Snakemake to re-download the files two ways:
 
 
 
-
-
-
-
-
-
 ## Stage 2: Replace Script with Snakefile (Hard-Coded)
 
+The next step in converting our workflow to Snakemake is to 
+hard-code the file names into a Snakemake rule and let Snakemake
+run the curl command to download them. Here are the links:
 
+| Read Files | URL (note: these links are fake) |
+|------------|----------------------------------|
+| `SRR606_1_reads.fq.gz` | <http://example.com/SRR606_1_reads.fq.gz> | 
+| `SRR606_2_reads.fq.gz` | <http://example.com/SRR606_2_reads.fq.gz> |
+| `SRR607_1_reads.fq.gz` | <http://example.com/SRR607_1_reads.fq.gz> |
+| `SRR607_2_reads.fq.gz` | <http://example.com/SRR607_2_reads.fq.gz> |
+| `SRR608_1_reads.fq.gz` | <http://example.com/SRR608_1_reads.fq.gz> |
+| `SRR608_2_reads.fq.gz` | <http://example.com/SRR608_2_reads.fq.gz> |
+| `SRR609_1_reads.fq.gz` | <http://example.com/SRR609_1_reads.fq.gz> |
+| `SRR609_2_reads.fq.gz` | <http://example.com/SRR609_2_reads.fq.gz> |
+
+There are multiple ways to modify the Snakefile to download the files directly.
+The approach shown below uses a `run` directive to run Python code, and a
+`shell()` call to run a shell command. It also shows how these two can be mixed:
+
+**`Snakefile`:**
+
+```python
+touchfile = '.downloaded_reads'
+
+# map of read files to read urls
+reads = {
+    "SRR606_1_reads.fq.gz" : "http://example.com/SRR606_1_reads.fq.gz",
+    "SRR606_2_reads.fq.gz" : "http://example.com/SRR606_2_reads.fq.gz",
+    "SRR607_1_reads.fq.gz" : "http://example.com/SRR607_1_reads.fq.gz",
+    "SRR607_2_reads.fq.gz" : "http://example.com/SRR607_2_reads.fq.gz",
+    "SRR608_1_reads.fq.gz" : "http://example.com/SRR608_1_reads.fq.gz",
+    "SRR608_2_reads.fq.gz" : "http://example.com/SRR608_2_reads.fq.gz",
+    "SRR609_1_reads.fq.gz" : "http://example.com/SRR609_1_reads.fq.gz",
+    "SRR609_2_reads.fq.gz" : "http://example.com/SRR609_2_reads.fq.gz"
+}
+
+rule download_reads:
+    """
+    Download all of our read files using Python code + a shell command.
+    """
+    output:
+        # This rule is now linked to this touchfile
+        touch(touchfile)
+    run:
+        for read_file, read_url in reads:
+            shell('''
+                curl -L {read_url} -o {read_file}
+            ''')
+```
+
+The Python variables `read_file` and `read_url` are available to the shell command
+through `{read_file}` and `{read_url}`.
 
 
 ## Stage 3: Replace Script with Snakefile (Wildcards)
