@@ -845,6 +845,86 @@ Complete log: /private/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T165657.1
 </li>
 </ul>
 <h2 id="stage-2-replace-script-with-snakefile-hard-coded">Stage 2: Replace Script with Snakefile (Hard-Coded)<a class="headerlink" href="#stage-2-replace-script-with-snakefile-hard-coded" title="Permanent link">&para;</a></h2>
+<p>The next step in converting our workflow to Snakemake is to 
+hard-code the file names into a Snakemake rule and let Snakemake
+run the curl command to download them. Here are the links:</p>
+<table>
+<thead>
+<tr>
+<th>Read Files</th>
+<th>URL (note: these links are fake)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SRR606_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR606_1_reads.fq.gz">http://example.com/SRR606_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR606_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR606_2_reads.fq.gz">http://example.com/SRR606_2_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR607_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR607_1_reads.fq.gz">http://example.com/SRR607_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR607_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR607_2_reads.fq.gz">http://example.com/SRR607_2_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR608_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR608_1_reads.fq.gz">http://example.com/SRR608_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR608_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR608_2_reads.fq.gz">http://example.com/SRR608_2_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR609_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR609_1_reads.fq.gz">http://example.com/SRR609_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR609_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR609_2_reads.fq.gz">http://example.com/SRR609_2_reads.fq.gz</a></td>
+</tr>
+</tbody>
+</table>
+<p>There are multiple ways to modify the Snakefile to download the files directly.
+The approach shown below uses a <code>run</code> directive to run Python code, and a
+<code>shell()</code> call to run a shell command. It also shows how these two can be mixed:</p>
+<p><strong><code>Snakefile</code>:</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">touchfile</span> <span class="o">=</span> <span class="s1">&#39;.downloaded_reads&#39;</span>
+
+<span class="c1"># map of read files to read urls</span>
+<span class="n">reads</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;SRR606_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR606_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR606_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR606_2_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR607_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR607_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR607_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR607_2_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR608_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR608_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR608_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR608_2_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR609_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR609_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR609_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR609_2_reads.fq.gz&quot;</span>
+<span class="p">}</span>
+
+<span class="n">rule</span> <span class="n">download_reads</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download all of our read files using Python code + a shell command.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span><span class="p">:</span>
+        <span class="c1"># This rule is now linked to this touchfile</span>
+        <span class="n">touch</span><span class="p">(</span><span class="n">touchfile</span><span class="p">)</span>
+    <span class="n">run</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">read_file</span><span class="p">,</span> <span class="n">read_url</span> <span class="ow">in</span> <span class="n">reads</span><span class="p">:</span>
+            <span class="n">shell</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                curl -L {read_url} -o {read_file}</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>The Python variables <code>read_file</code> and <code>read_url</code> are available to the shell command
+through <code>{read_file}</code> and <code>{read_url}</code>.</p>
 <h2 id="stage-3-replace-script-with-snakefile-wildcards">Stage 3: Replace Script with Snakefile (Wildcards)<a class="headerlink" href="#stage-3-replace-script-with-snakefile-wildcards" title="Permanent link">&para;</a></h2>
                 
                   
