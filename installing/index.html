@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../">
-      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-2.7.2">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.7.2">
     
     
       
@@ -375,8 +375,8 @@ which enables the installation of pyenv with a single command.</p>
 <h2 id="installing-snakemake-from-pypi-with-pip">Installing Snakemake from Pypi with Pip<a class="headerlink" href="#installing-snakemake-from-pypi-with-pip" title="Permanent link">&para;</a></h2>
 <p>Once you have Python installed, you should have <code>pip</code> available as well.
 Snakemake can be installed using pip:</p>
-<div class="codehilite"><pre><span></span>$ virtualenv -p python3 .venv
-$ source .venv/bin/activate
+<div class="codehilite"><pre><span></span>$ virtualenv vp
+$ source vp/bin/activate
 $ pip install snakemake
 </pre></div>
 
@@ -384,6 +384,11 @@ $ pip install snakemake
 <h2 id="installing-snakemake-from-bioconda-with-conda">Installing Snakemake from Bioconda with Conda<a class="headerlink" href="#installing-snakemake-from-bioconda-with-conda" title="Permanent link">&para;</a></h2>
 <p>If you are using conda, you can install Snakemake using conda by first 
 adding some conda channels, then installing Snakemake using <code>conda install</code>:</p>
+<div class="codehilite"><pre><span></span>conda install -c bioconda -c conda-forge snakemake
+</pre></div>
+
+
+<p>This will install snakemake from the bioconda channel.</p>
                 
                   
                 
@@ -461,7 +466,7 @@ adding some conda channels, then installing Snakemake using <code>conda install<
     
       <script src="../assets/javascripts/application.0cf9b500.js"></script>
       
-      <script>app.initialize({version:"0.17.3",url:{base:".."}})</script>
+      <script>app.initialize({version:"0.17.5",url:{base:".."}})</script>
       
         <script src="../search/require.js"></script>
       

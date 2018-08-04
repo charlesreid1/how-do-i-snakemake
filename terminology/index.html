@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../">
-      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-2.7.2">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.7.2">
     
     
       
@@ -290,14 +290,40 @@
                 <h1 id="terminology">Terminology<a class="headerlink" href="#terminology" title="Permanent link">&para;</a></h1>
 <ul>
 <li>
+<p><strong>container</strong> - Containers are like very lightweight
+    virtual machines that can provide an isolated,
+    consistent, reproducible environment in which to
+    run software.</p>
+</li>
+<li>
+<p><strong>directive</strong> - this refers to subheadings of rules,
+    such as <code>input:</code> or <code>output:</code> or <code>shell:</code></p>
+</li>
+<li>
+<p><strong>docker</strong> - Docker is a program that allows running
+    containers. Docker is very popular in enterprise
+    software engineering, but presents challenges for
+    scientific computing because it requires an admin
+    account and presents security risks, making it
+    hard to run in an HPC environment.</p>
+</li>
+<li>
 <p><strong>rule</strong> - Snakemake rules define a given task,
     the input files it depends on, the output files
     it produces, the shell commands it should run,
     etc.</p>
 </li>
 <li>
-<p><strong>directive</strong> - this refers to subheadings of rules,
-    such as <code>input:</code> or <code>output:</code> or <code>shell:</code></p>
+<p><strong>singularity</strong> - Singularity is a program that allows
+    running containers, like Docker, but without requiring
+    an admin account and without many of the security 
+    concerns that Docker creates.</p>
+</li>
+<li>
+<p><strong>Snakefile</strong> - Snakemake is a Python program that is used
+    to run a set of commands in a file; Snakefile is the
+    default name of the file in which Snakemake expects to
+    find those definitions.</p>
 </li>
 </ul>
                 
@@ -377,7 +403,7 @@
     
       <script src="../assets/javascripts/application.0cf9b500.js"></script>
       
-      <script>app.initialize({version:"0.17.3",url:{base:".."}})</script>
+      <script>app.initialize({version:"0.17.5",url:{base:".."}})</script>
       
         <script src="../search/require.js"></script>
       

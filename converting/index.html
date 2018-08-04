@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../">
-      <meta name="generator" content="mkdocs-0.17.3, mkdocs-material-2.7.2">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.7.2">
     
     
       
@@ -271,8 +271,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example-filtering-sequencer-reads" title="Example: Filtering Sequencer Reads" class="md-nav__link">
-    Example: Filtering Sequencer Reads
+  <a href="#example-overview-filtering-sequencer-reads" title="Example Overview: Filtering Sequencer Reads" class="md-nav__link">
+    Example Overview: Filtering Sequencer Reads
   </a>
   
 </li>
@@ -385,8 +385,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example-filtering-sequencer-reads" title="Example: Filtering Sequencer Reads" class="md-nav__link">
-    Example: Filtering Sequencer Reads
+  <a href="#example-overview-filtering-sequencer-reads" title="Example Overview: Filtering Sequencer Reads" class="md-nav__link">
+    Example Overview: Filtering Sequencer Reads
   </a>
   
 </li>
@@ -509,7 +509,8 @@ some kind of corner case that's not covered in any Snakemake examples.</p>
    smaller parts, and convert some of those parts into separate Snakemake rules.</p>
 </li>
 </ol>
-<h2 id="example-filtering-sequencer-reads">Example: Filtering Sequencer Reads<a class="headerlink" href="#example-filtering-sequencer-reads" title="Permanent link">&para;</a></h2>
+<p><a name="example"></a></p>
+<h2 id="example-overview-filtering-sequencer-reads">Example Overview: Filtering Sequencer Reads<a class="headerlink" href="#example-overview-filtering-sequencer-reads" title="Permanent link">&para;</a></h2>
 <p>Let's illustrate the process of converting a workflow from shell scripts to a
 Snakefile, and doing so in stages, using a hypothetical workflow that involves
 downloading data files containing reads from a sequencer from an external URL:</p>
@@ -555,6 +556,7 @@ downloading data files containing reads from a sequencer from an external URL:</
 </tr>
 </tbody>
 </table>
+<p><a name="stage1"></a></p>
 <h2 id="stage-1-shell-script-snakefile">Stage 1: Shell Script + Snakefile<a class="headerlink" href="#stage-1-shell-script-snakefile" title="Permanent link">&para;</a></h2>
 <h3 id="the-shell-script">The Shell Script<a class="headerlink" href="#the-shell-script" title="Permanent link">&para;</a></h3>
 <p>Start out with a single Snakemake rule that calls a single bash shell script
@@ -844,6 +846,7 @@ Complete log: /private/tmp/how-do-i-snakemake/.snakemake/log/2018-07-16T165657.1
 <p>Run Snakemake with the <code>--force</code> flag.</p>
 </li>
 </ul>
+<p><a name="stage2"></a></p>
 <h2 id="stage-2-replace-script-with-snakefile-hard-coded">Stage 2: Replace Script with Snakefile (Hard-Coded)<a class="headerlink" href="#stage-2-replace-script-with-snakefile-hard-coded" title="Permanent link">&para;</a></h2>
 <p>The next step in converting our workflow to Snakemake is to 
 hard-code the file names into a Snakemake rule and let Snakemake
@@ -925,7 +928,117 @@ The approach shown below uses a <code>run</code> directive to run Python code, a
 
 <p>The Python variables <code>read_file</code> and <code>read_url</code> are available to the shell command
 through <code>{read_file}</code> and <code>{read_url}</code>.</p>
+<p>The Snakefile above shows how the <code>run:</code> directive and <code>shell()</code> function call
+can be combined. This is very convenient, since otherwise we would end up with
+complicated subprocess command construction and funky string manipulations.</p>
+<p><strong>Problem:</strong> There's still one big problem, and that's how the task of
+downloading each file is being divided up. We have a relatively short list of
+files to download here, but suppose we had a list of 200 files. Now, we have
+a single rule that is responsible for downoading 200 files. If any of those 
+files are missing, it will correctly assume the rule needs to be re-run, but
+will end up running the entire rule, and re-downloading every file.</p>
+<p>We really need to split our task up so that each rule corresponds to a single
+task of downloading a single indivdiual file. If we were hard-coding everything,
+then we might end up hard-coding a bunch of rules, and that would stink.
+Instead, let's use wildcards.</p>
+<div class="codehilite"><pre><span></span>-----------------------------------8&lt;----------------------------------------------
+</pre></div>
+
+
+<p><a name="stage3"></a></p>
 <h2 id="stage-3-replace-script-with-snakefile-wildcards">Stage 3: Replace Script with Snakefile (Wildcards)<a class="headerlink" href="#stage-3-replace-script-with-snakefile-wildcards" title="Permanent link">&para;</a></h2>
+<p>The next step in converting our workflow to Snakemake is to 
+hard-code the file names into a Snakemake rule and let Snakemake
+run the curl command to download them. Here are the links:</p>
+<table>
+<thead>
+<tr>
+<th>Read Files</th>
+<th>URL (note: these links are fake)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SRR606_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR606_1_reads.fq.gz">http://example.com/SRR606_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR606_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR606_2_reads.fq.gz">http://example.com/SRR606_2_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR607_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR607_1_reads.fq.gz">http://example.com/SRR607_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR607_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR607_2_reads.fq.gz">http://example.com/SRR607_2_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR608_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR608_1_reads.fq.gz">http://example.com/SRR608_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR608_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR608_2_reads.fq.gz">http://example.com/SRR608_2_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR609_1_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR609_1_reads.fq.gz">http://example.com/SRR609_1_reads.fq.gz</a></td>
+</tr>
+<tr>
+<td><code>SRR609_2_reads.fq.gz</code></td>
+<td><a href="http://example.com/SRR609_2_reads.fq.gz">http://example.com/SRR609_2_reads.fq.gz</a></td>
+</tr>
+</tbody>
+</table>
+<p>There are multiple ways to modify the Snakefile to download the files directly.
+The approach shown below uses a <code>run</code> directive to run Python code, and a
+<code>shell()</code> call to run a shell command. It also shows how these two can be mixed:</p>
+<p><strong><code>Snakefile</code>:</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">touchfile</span> <span class="o">=</span> <span class="s1">&#39;.downloaded_reads&#39;</span>
+
+<span class="c1"># from https://snakemake.readthedocs.io/en/stable/snakefiles/remote_files.html#read-only-web-http-s</span>
+<span class="kn">from</span> <span class="nn">snakemake.remote.HTTP</span> <span class="kn">import</span> <span class="n">RemoteProvider</span> <span class="k">as</span> <span class="n">HTTPRemoteProvider</span>
+<span class="n">HTTP</span> <span class="o">=</span> <span class="n">HTTPRemoteProvider</span><span class="p">()</span>
+
+<span class="c1"># map of read files to read urls</span>
+<span class="n">reads</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;SRR606_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR606_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR606_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR606_2_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR607_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR607_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR607_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR607_2_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR608_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR608_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR608_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR608_2_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR609_1_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR609_1_reads.fq.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SRR609_2_reads.fq.gz&quot;</span> <span class="p">:</span> <span class="s2">&quot;http://example.com/SRR609_2_reads.fq.gz&quot;</span>
+<span class="p">}</span>
+
+<span class="n">rule</span> <span class="n">download_read</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download a single individual read</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">input</span><span class="p">:</span>
+        <span class="c1"># The input file is the remote HTTP url</span>
+        <span class="n">HTTP</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">&quot;example.com/{prefix}_{direction}_reads.fq.gz&quot;</span><span class="p">,</span> <span class="n">keep_local</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">output</span><span class="p">:</span>
+        <span class="c1"># The output file is now the read file itself</span>
+        <span class="s2">&quot;{prefix}_{direction}_reads.fq.gz&quot;</span>
+    <span class="n">shell</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        curl -L {input} -o {output}</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+</pre></div>
+
+
+<p>Let's walk through this step by step.</p>
+<p>We start by importing the <code>HTTPRemoteProvider</code>. This is an object that will
+check if a remote file is available and if it is not the rule fails to
+execute.</p>
+<p>The <code>input:</code> directive contains a call to <code>HTTP.remote()</code> that passes the 
+URL of the file, containing the wildcards that are matched in the <code>output:</code>
+directive. The <code>keep_local=True</code> flag ensures the downloaded files are 
+not deleted.</p>
                 
                   
                 
@@ -989,7 +1102,7 @@ through <code>{read_file}</code> and <code>{read_url}</code>.</p>
     
       <script src="../assets/javascripts/application.0cf9b500.js"></script>
       
-      <script>app.initialize({version:"0.17.3",url:{base:".."}})</script>
+      <script>app.initialize({version:"0.17.5",url:{base:".."}})</script>
       
         <script src="../search/require.js"></script>
       
