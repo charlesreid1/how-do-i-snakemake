@@ -49,10 +49,21 @@ throughout this documentation and what they mean.
 [Converting Workflows to Snakemake](converting.md) - strategies for
 converting shell script workflows into Snakemake workflows.
 
+[**Example Overview: Filtering Sequence Reads**](converting.md#example)
+
+[**Stage 1: Shell Script + Snakefile**](converting.md#stage1)
+
+[**Stage 2: Replace Script with Snakefile (Hard-Coded)**](converting.md#stage2)
+
+[**Stage 3: Replace Script with Snakefile (Wildcards)**](converting.md#stage3)
+
 
 ## Useful Resources
 
 Following is a list of useful Snakemake resources:
 
 * <https://snakemake.readthedocs.io/>
+
+
+
 

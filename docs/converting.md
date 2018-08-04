@@ -25,7 +25,8 @@ Two recommendations to help overcome this:
    smaller parts, and convert some of those parts into separate Snakemake rules.
 
 
-## Example: Filtering Sequencer Reads
+<a name="example"></a>
+## Example Overview: Filtering Sequencer Reads
 
 Let's illustrate the process of converting a workflow from shell scripts to a
 Snakefile, and doing so in stages, using a hypothetical workflow that involves
@@ -43,6 +44,7 @@ downloading data files containing reads from a sequencer from an external URL:
 | `SRR609_2_reads.fq.gz` | <http://example.com/SRR609_2_reads.fq.gz> |
 
 
+<a name="stage1"></a>
 ## Stage 1: Shell Script + Snakefile
 
 ### The Shell Script
@@ -333,6 +335,7 @@ You can force Snakemake to re-download the files two ways:
 
 
 
+<a name="stage2"></a>
 ## Stage 2: Replace Script with Snakefile (Hard-Coded)
 
 The next step in converting our workflow to Snakemake is to 
@@ -388,8 +391,95 @@ rule download_reads:
 The Python variables `read_file` and `read_url` are available to the shell command
 through `{read_file}` and `{read_url}`.
 
+The Snakefile above shows how the `run:` directive and `shell()` function call
+can be combined. This is very convenient, since otherwise we would end up with
+complicated subprocess command construction and funky string manipulations.
 
+**Problem:** There's still one big problem, and that's how the task of
+downloading each file is being divided up. We have a relatively short list of
+files to download here, but suppose we had a list of 200 files. Now, we have
+a single rule that is responsible for downoading 200 files. If any of those 
+files are missing, it will correctly assume the rule needs to be re-run, but
+will end up running the entire rule, and re-downloading every file.
+
+We really need to split our task up so that each rule corresponds to a single
+task of downloading a single indivdiual file. If we were hard-coding everything,
+then we might end up hard-coding a bunch of rules, and that would stink.
+Instead, let's use wildcards.
+
+
+```
+-----------------------------------8<----------------------------------------------
+```
+
+
+<a name="stage3"></a>
 ## Stage 3: Replace Script with Snakefile (Wildcards)
 
+The next step in converting our workflow to Snakemake is to 
+hard-code the file names into a Snakemake rule and let Snakemake
+run the curl command to download them. Here are the links:
 
+| Read Files | URL (note: these links are fake) |
+|------------|----------------------------------|
+| `SRR606_1_reads.fq.gz` | <http://example.com/SRR606_1_reads.fq.gz> | 
+| `SRR606_2_reads.fq.gz` | <http://example.com/SRR606_2_reads.fq.gz> |
+| `SRR607_1_reads.fq.gz` | <http://example.com/SRR607_1_reads.fq.gz> |
+| `SRR607_2_reads.fq.gz` | <http://example.com/SRR607_2_reads.fq.gz> |
+| `SRR608_1_reads.fq.gz` | <http://example.com/SRR608_1_reads.fq.gz> |
+| `SRR608_2_reads.fq.gz` | <http://example.com/SRR608_2_reads.fq.gz> |
+| `SRR609_1_reads.fq.gz` | <http://example.com/SRR609_1_reads.fq.gz> |
+| `SRR609_2_reads.fq.gz` | <http://example.com/SRR609_2_reads.fq.gz> |
+
+There are multiple ways to modify the Snakefile to download the files directly.
+The approach shown below uses a `run` directive to run Python code, and a
+`shell()` call to run a shell command. It also shows how these two can be mixed:
+
+**`Snakefile`:**
+
+```python
+touchfile = '.downloaded_reads'
+
+# from https://snakemake.readthedocs.io/en/stable/snakefiles/remote_files.html#read-only-web-http-s
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
+# map of read files to read urls
+reads = {
+    "SRR606_1_reads.fq.gz" : "http://example.com/SRR606_1_reads.fq.gz",
+    "SRR606_2_reads.fq.gz" : "http://example.com/SRR606_2_reads.fq.gz",
+    "SRR607_1_reads.fq.gz" : "http://example.com/SRR607_1_reads.fq.gz",
+    "SRR607_2_reads.fq.gz" : "http://example.com/SRR607_2_reads.fq.gz",
+    "SRR608_1_reads.fq.gz" : "http://example.com/SRR608_1_reads.fq.gz",
+    "SRR608_2_reads.fq.gz" : "http://example.com/SRR608_2_reads.fq.gz",
+    "SRR609_1_reads.fq.gz" : "http://example.com/SRR609_1_reads.fq.gz",
+    "SRR609_2_reads.fq.gz" : "http://example.com/SRR609_2_reads.fq.gz"
+}
+
+rule download_read:
+    """
+    Download a single individual read
+    """
+    input:
+        # The input file is the remote HTTP url
+        HTTP.remote("example.com/{prefix}_{direction}_reads.fq.gz", keep_local=True)
+    output:
+        # The output file is now the read file itself
+        "{prefix}_{direction}_reads.fq.gz"
+    shell:
+        '''
+        curl -L {input} -o {output}
+        '''
+```
+
+Let's walk through this step by step.
+
+We start by importing the `HTTPRemoteProvider`. This is an object that will
+check if a remote file is available and if it is not the rule fails to
+execute.
+
+The `input:` directive contains a call to `HTTP.remote()` that passes the 
+URL of the file, containing the wildcards that are matched in the `output:`
+directive. The `keep_local=True` flag ensures the downloaded files are 
+not deleted.
 

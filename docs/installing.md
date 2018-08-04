@@ -25,8 +25,8 @@ Once you have Python installed, you should have `pip` available as well.
 Snakemake can be installed using pip:
 
 ```
-$ virtualenv -p python3 .venv
-$ source .venv/bin/activate
+$ virtualenv vp
+$ source vp/bin/activate
 $ pip install snakemake
 ```
 
@@ -35,5 +35,9 @@ $ pip install snakemake
 If you are using conda, you can install Snakemake using conda by first 
 adding some conda channels, then installing Snakemake using `conda install`:
 
+```
+conda install -c bioconda -c conda-forge snakemake
+```
 
+This will install snakemake from the bioconda channel.
 
