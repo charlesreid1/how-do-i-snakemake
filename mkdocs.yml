@@ -21,7 +21,7 @@ theme:
   font:
     text: 'Bitter'
     code: 'PT Mono'
-pages:
+nav:
   - "Index" : "index.md"
   - "Installing Snakemake" : "installing.md"
   - "Snakemake Terminology" : "terminology.md"
@@ -34,3 +34,6 @@ markdown_extensions:
       guess_lang: false
   - toc:
       permalink: true
+
+
+strict: true
